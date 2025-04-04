@@ -9,6 +9,7 @@ USAGE:
 COMMANDS:
    foo      foo command
    bar      bar command
+   version  Show version
    help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
@@ -46,5 +47,20 @@ DESCRIPTION:
    This is a bar command
 
 OPTIONS:
+   --help, -h  show help
+```
+
+## hello version
+
+```console
+$ hello version --help
+NAME:
+   hello version - Show version
+
+USAGE:
+   hello version
+
+OPTIONS:
+   --json, -j  Output version in JSON format (default: false)
    --help, -h  show help
 ```

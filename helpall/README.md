@@ -26,8 +26,8 @@ helpall.With(&cli.Command{
 `help-all` command outputs the help message.
 You can put it into the document.
 
-```console
-$ go run ./cmd/hello help-all > hello.md
+```sh
+go run ./cmd/hello help-all > hello.md
 ```
 
 Example: [hello.md](../hello.md)
