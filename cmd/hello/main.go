@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/suzuki-shunsuke/urfave-cli-v3-util/helpall"
+	"github.com/suzuki-shunsuke/urfave-cli-v3-util/vcmd"
 	"github.com/urfave/cli/v3"
 )
 
@@ -29,6 +30,11 @@ func run() error {
 				Usage:       "bar command",
 				Description: "This is a bar command",
 			},
+			vcmd.New(&vcmd.Command{
+				Name:    "hello",
+				Version: "1.0.0",
+				SHA:     "abc123",
+			}),
 		},
 	}, nil).Run(context.Background(), os.Args)
 }
