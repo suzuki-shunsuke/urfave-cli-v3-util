@@ -3,7 +3,6 @@ package vcmd
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -18,9 +17,13 @@ type Command struct {
 	Stdout  io.Writer
 }
 
-func (cmd *Command) New() (*cli.Command, error) {
+func New(cmd *Command) *cli.Command {
+	return cmd.New()
+}
+
+func (cmd *Command) New() *cli.Command {
 	if cmd == nil {
-		return nil, errors.New("Command is nil")
+		cmd = &Command{}
 	}
 	if cmd.Stdout == nil {
 		cmd.Stdout = os.Stdout
@@ -33,9 +36,10 @@ func (cmd *Command) New() (*cli.Command, error) {
 			&cli.BoolFlag{
 				Name:    "json",
 				Aliases: []string{"j"},
+				Usage:   "Output version in JSON format",
 			},
 		},
-	}, nil
+	}
 }
 
 func (cmd *Command) action(_ context.Context, c *cli.Command) error {
@@ -51,7 +55,7 @@ func (cmd *Command) action(_ context.Context, c *cli.Command) error {
 		}
 		return nil
 	}
-	fmt.Println(cmd.Stdout, cmd.version())
+	fmt.Fprintln(cmd.Stdout, cmd.version())
 	return nil
 }
 
