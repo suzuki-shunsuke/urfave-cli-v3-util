@@ -17,8 +17,9 @@ func main() {
 }
 
 func run() error {
-	return helpall.With(&cli.Command{
-		Name: "hello",
+	return helpall.With(vcmd.With(&cli.Command{
+		Name:    "hello",
+		Version: "1.0.0",
 		Commands: []*cli.Command{
 			{
 				Name:        "foo",
@@ -30,11 +31,6 @@ func run() error {
 				Usage:       "bar command",
 				Description: "This is a bar command",
 			},
-			vcmd.New(&vcmd.Command{
-				Name:    "hello",
-				Version: "1.0.0",
-				SHA:     "abc123",
-			}),
 		},
-	}, nil).Run(context.Background(), os.Args)
+	}, "abc123"), nil).Run(context.Background(), os.Args)
 }
