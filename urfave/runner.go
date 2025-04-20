@@ -1,7 +1,6 @@
 package urfave
 
 import (
-	"context"
 	"io"
 
 	"github.com/sirupsen/logrus"
@@ -24,6 +23,6 @@ type Runner struct {
 	LogE    *logrus.Entry
 }
 
-func (r *Runner) Command(ctx context.Context, cmd *cli.Command) *cli.Command {
+func (r *Runner) Command(cmd *cli.Command) *cli.Command {
 	return helpall.With(vcmd.With(cmd, r.LDFlags.Commit), nil)
 }
