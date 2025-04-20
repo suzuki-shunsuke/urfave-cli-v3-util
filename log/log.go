@@ -18,7 +18,17 @@ func New(program, version string) *logrus.Entry {
 	})
 }
 
-func SetLevel(level string, logE *logrus.Entry) error {
+func Set(logE *logrus.Entry, level, color string) error {
+	if err := setLevel(logE, level); err != nil {
+		return err
+	}
+	if err := setColor(logE, color); err != nil {
+		return err
+	}
+	return nil
+}
+
+func setLevel(logE *logrus.Entry, level string) error {
 	if level == "" {
 		return nil
 	}
@@ -30,17 +40,17 @@ func SetLevel(level string, logE *logrus.Entry) error {
 	return nil
 }
 
-func SetColor(color string, logE *logrus.Entry) error {
+func setColor(logE *logrus.Entry, color string) error {
 	switch color {
 	case "", "auto":
 		return nil
 	case "always":
-		logrus.SetFormatter(&logrus.TextFormatter{
+		logE.Logger.SetFormatter(&logrus.TextFormatter{
 			ForceColors: true,
 		})
 		return nil
 	case "never":
-		logrus.SetFormatter(&logrus.TextFormatter{
+		logE.Logger.SetFormatter(&logrus.TextFormatter{
 			DisableColors: true,
 		})
 		return nil
