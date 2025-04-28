@@ -24,5 +24,8 @@ type Runner struct {
 }
 
 func (r *Runner) Command(cmd *cli.Command) *cli.Command {
+	cmd.ConfigureShellCompletionCommand = func(cmd *cli.Command) {
+		cmd.Hidden = false
+	}
 	return helpall.With(vcmd.With(cmd, r.LDFlags.Commit), nil)
 }
