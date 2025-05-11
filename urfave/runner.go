@@ -32,8 +32,8 @@ func Command(logE *logrus.Entry, ldflags *LDFlags, cmd *cli.Command) *cli.Comman
 		LDFlags: ldflags,
 		LogE:    logE,
 	}
-	r.Command(cmd)
 	cmd.Version = ldflags.Version
+	r.Command(cmd)
 	return cmd
 }
 
