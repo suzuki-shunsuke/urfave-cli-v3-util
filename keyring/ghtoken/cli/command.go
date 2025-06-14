@@ -11,15 +11,17 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func New(logE *logrus.Entry) *cli.Command {
+func New(logE *logrus.Entry, tokenService string) *cli.Command {
 	r := &runner{
-		logE: logE,
+		logE:         logE,
+		tokenService: tokenService,
 	}
 	return r.Command()
 }
 
 type runner struct {
-	logE *logrus.Entry
+	logE         *logrus.Entry
+	tokenService string
 }
 
 func (r *runner) Command() *cli.Command {
@@ -53,7 +55,7 @@ func (r *runner) Command() *cli.Command {
 
 func (r *runner) action(_ context.Context, c *cli.Command) error {
 	term := settoken.NewPasswordReader(os.Stdout)
-	tokenManager := ghtoken.NewTokenManager()
+	tokenManager := ghtoken.NewTokenManager(r.tokenService)
 	ctrl := settoken.New(&settoken.Param{
 		IsStdin: c.Bool("stdin"),
 		Stdin:   os.Stdin,
@@ -62,7 +64,7 @@ func (r *runner) action(_ context.Context, c *cli.Command) error {
 }
 
 func (r *runner) remove(_ context.Context, _ *cli.Command) error {
-	tokenManager := ghtoken.NewTokenManager()
+	tokenManager := ghtoken.NewTokenManager(r.tokenService)
 	ctrl := rmtoken.New(&rmtoken.Param{}, tokenManager)
 	return ctrl.Remove(r.logE) //nolint:wrapcheck
 }

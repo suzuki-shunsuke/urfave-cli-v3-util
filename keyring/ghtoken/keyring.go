@@ -19,8 +19,10 @@ type TokenManager struct {
 	keyService string
 }
 
-func NewTokenManager() *TokenManager {
-	return &TokenManager{}
+func NewTokenManager(keyService string) *TokenManager {
+	return &TokenManager{
+		keyService: keyService,
+	}
 }
 
 func (tm *TokenManager) Set(token string) error {
