@@ -38,6 +38,7 @@ func Command(logE *logrus.Entry, ldflags *LDFlags, cmd *cli.Command) *cli.Comman
 }
 
 func (r *Runner) Command(cmd *cli.Command) *cli.Command {
+	cmd.EnableShellCompletion = true
 	cmd.ConfigureShellCompletionCommand = func(cmd *cli.Command) {
 		cmd.Hidden = false
 	}
