@@ -9,7 +9,7 @@ require (
 	github.com/urfave/cli/v3 v3.3.8
 	github.com/zalando/go-keyring v0.2.6
 	golang.org/x/oauth2 v0.30.0
-	golang.org/x/term v0.32.0
+	golang.org/x/term v0.33.0
 )
 
 require (
@@ -17,5 +17,5 @@ require (
 	github.com/danieljoos/wincred v1.2.2 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
 )
