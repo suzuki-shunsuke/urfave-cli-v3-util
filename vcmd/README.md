@@ -1,6 +1,6 @@
 # vcmd
 
-vcmd is a Go Package to implment `version` command.
+vcmd is a Go Package to implement `version` command.
 
 ## How To Use
 
