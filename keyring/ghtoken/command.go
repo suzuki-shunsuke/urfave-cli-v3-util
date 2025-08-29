@@ -7,8 +7,12 @@ import (
 )
 
 type Actor interface {
-	Remove(ctx context.Context, c *cli.Command) error
-	Set(ctx context.Context, c *cli.Command) error
+	Remove() error
+	Set(input *InputSet) error
+}
+
+type InputSet struct {
+	Stdin bool
 }
 
 func Command(actor Actor) *cli.Command {
@@ -21,12 +25,16 @@ func Command(actor Actor) *cli.Command {
 				Name:        "set",
 				Usage:       "Set GitHub Access token",
 				Description: `Set GitHub Access token to keyring.`,
-				Action:      actor.Set,
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
 						Name:  "stdin",
 						Usage: "Read GitHub Access token from stdin",
 					},
+				},
+				Action: func(_ context.Context, c *cli.Command) error {
+					return actor.Set(&InputSet{
+						Stdin: c.Bool("stdin"),
+					})
 				},
 			},
 			{
@@ -34,7 +42,9 @@ func Command(actor Actor) *cli.Command {
 				Aliases:     []string{"rm"},
 				Usage:       "Remove GitHub Access token",
 				Description: `Remove GitHub Access token from keyring.`,
-				Action:      actor.Remove,
+				Action: func(_ context.Context, _ *cli.Command) error {
+					return actor.Remove()
+				},
 			},
 		},
 	}
