@@ -6,16 +6,11 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-type Actor interface {
-	Remove() error
-	Set(input *InputSet) error
-}
-
 type InputSet struct {
 	Stdin bool
 }
 
-func Command(actor Actor) *cli.Command {
+func Command(actor *Actor) *cli.Command {
 	return &cli.Command{
 		Name:        "token",
 		Usage:       "Manage GitHub Access token",
