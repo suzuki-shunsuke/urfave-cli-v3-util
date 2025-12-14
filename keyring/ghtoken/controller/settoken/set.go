@@ -1,14 +1,15 @@
 package settoken
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log/slog"
 	"strings"
 )
 
-func (c *Controller) Set(logger *slog.Logger) error {
-	text, err := c.get(logger)
+func (c *Controller) Set(ctx context.Context, logger *slog.Logger) error {
+	text, err := c.get(ctx, logger)
 	if err != nil {
 		return fmt.Errorf("get a GitHub access Token: %w", err)
 	}
@@ -18,26 +19,29 @@ func (c *Controller) Set(logger *slog.Logger) error {
 	return nil
 }
 
-const (
-	PanicLevel int = iota
-	FatalLevel
-	ErrorLevel
-	WarnLevel
-	InfoLevel
-	DebugLevel
-	TraceLevel
-)
-
-func (c *Controller) get(logger *slog.Logger) ([]byte, error) {
+func (c *Controller) get(ctx context.Context, logger *slog.Logger) ([]byte, error) {
 	if c.param.IsStdin {
-		s, err := io.ReadAll(c.param.Stdin)
-		if err != nil {
-			return nil, fmt.Errorf("read a GitHub access token from stdin: %w", err)
+		type result struct {
+			data []byte
+			err  error
 		}
-		logger.Debug("read a GitHub access token from stdin")
-		return s, nil
+		ch := make(chan result, 1)
+		go func() {
+			s, err := io.ReadAll(c.param.Stdin)
+			ch <- result{s, err}
+		}()
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		case r := <-ch:
+			if r.err != nil {
+				return nil, fmt.Errorf("read a GitHub access token from stdin: %w", r.err)
+			}
+			logger.Debug("read a GitHub access token from stdin")
+			return r.data, nil
+		}
 	}
-	text, err := c.term.ReadPassword()
+	text, err := c.term.ReadPassword(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("read a GitHub access Token from terminal: %w", err)
 	}

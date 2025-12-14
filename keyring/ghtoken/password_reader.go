@@ -1,6 +1,7 @@
 package ghtoken
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"syscall"
@@ -18,12 +19,26 @@ func NewPasswordReader(stdout io.Writer) *PasswordReader {
 	}
 }
 
-func (p *PasswordReader) ReadPassword() ([]byte, error) {
+func (p *PasswordReader) ReadPassword(ctx context.Context) ([]byte, error) {
 	fmt.Fprint(p.stdout, "Enter a GitHub access token: ")
-	b, err := term.ReadPassword(uintptr(syscall.Stdin))
-	fmt.Fprintln(p.stdout, "")
-	if err != nil {
-		return nil, fmt.Errorf("read a GitHub access token from terminal: %w", err)
+	type result struct {
+		data []byte
+		err  error
 	}
-	return b, nil
+	ch := make(chan result, 1)
+	go func() {
+		b, err := term.ReadPassword(uintptr(syscall.Stdin))
+		ch <- result{b, err}
+	}()
+	select {
+	case <-ctx.Done():
+		fmt.Fprintln(p.stdout, "")
+		return nil, ctx.Err()
+	case r := <-ch:
+		fmt.Fprintln(p.stdout, "")
+		if r.err != nil {
+			return nil, fmt.Errorf("read a GitHub access token from terminal: %w", r.err)
+		}
+		return r.data, nil
+	}
 }
