@@ -11,6 +11,8 @@ type InputSet struct {
 }
 
 func Command(actor *Actor) *cli.Command {
+	setArgs := &InputSet{}
+
 	return &cli.Command{
 		Name:        "token",
 		Usage:       "Manage GitHub Access token",
@@ -22,14 +24,13 @@ func Command(actor *Actor) *cli.Command {
 				Description: `Set GitHub Access token to keyring.`,
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
-						Name:  "stdin",
-						Usage: "Read GitHub Access token from stdin",
+						Name:        "stdin",
+						Usage:       "Read GitHub Access token from stdin",
+						Destination: &setArgs.Stdin,
 					},
 				},
-				Action: func(ctx context.Context, c *cli.Command) error {
-					return actor.Set(ctx, &InputSet{
-						Stdin: c.Bool("stdin"),
-					})
+				Action: func(ctx context.Context, _ *cli.Command) error {
+					return actor.Set(ctx, setArgs)
 				},
 			},
 			{
