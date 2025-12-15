@@ -1,6 +1,7 @@
 package ghtoken
 
 import (
+	"context"
 	"log/slog"
 	"os"
 
@@ -20,14 +21,14 @@ func NewActor(logger *slog.Logger, tokenService string) *Actor {
 	}
 }
 
-func (r *Actor) Set(input *InputSet) error {
+func (r *Actor) Set(ctx context.Context, input *InputSet) error {
 	term := NewPasswordReader(os.Stdout)
 	tokenManager := NewTokenManager(r.tokenService)
 	ctrl := settoken.New(&settoken.Param{
 		IsStdin: input.Stdin,
 		Stdin:   os.Stdin,
 	}, term, tokenManager)
-	return ctrl.Set(r.logger) //nolint:wrapcheck
+	return ctrl.Set(ctx, r.logger) //nolint:wrapcheck
 }
 
 func (r *Actor) Remove() error {

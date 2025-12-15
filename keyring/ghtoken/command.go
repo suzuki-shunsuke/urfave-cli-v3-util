@@ -26,8 +26,8 @@ func Command(actor *Actor) *cli.Command {
 						Usage: "Read GitHub Access token from stdin",
 					},
 				},
-				Action: func(_ context.Context, c *cli.Command) error {
-					return actor.Set(&InputSet{
+				Action: func(ctx context.Context, c *cli.Command) error {
+					return actor.Set(ctx, &InputSet{
 						Stdin: c.Bool("stdin"),
 					})
 				},

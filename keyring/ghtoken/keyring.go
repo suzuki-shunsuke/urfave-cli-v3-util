@@ -65,12 +65,12 @@ func (ks *TokenSource) Token() (*oauth2.Token, error) {
 	if token != nil {
 		return token, nil
 	}
-	ks.logger.Debug("getting a GitHub Access toke from keyring")
+	ks.logger.Debug("getting a GitHub Access token from keyring")
 	s, err := keyring.Get(ks.keyService, keyName)
 	if err != nil {
 		return nil, fmt.Errorf("get a GitHub Access token from keyring: %w", err)
 	}
-	ks.logger.Debug("got a GitHub Access toke from keyring")
+	ks.logger.Debug("got a GitHub Access token from keyring")
 	token = &oauth2.Token{
 		AccessToken: s,
 	}

@@ -1,6 +1,9 @@
 package settoken
 
-import "io"
+import (
+	"context"
+	"io"
+)
 
 type Controller struct {
 	param        *Param
@@ -22,7 +25,7 @@ type Param struct {
 }
 
 type Terminal interface {
-	ReadPassword() ([]byte, error)
+	ReadPassword(ctx context.Context) ([]byte, error)
 }
 
 type TokenManager interface {
