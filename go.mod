@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/charmbracelet/x/term v0.2.2
 	github.com/suzuki-shunsuke/go-error-with-exit-code v1.0.0
-	github.com/suzuki-shunsuke/slog-error v0.2.1
+	github.com/suzuki-shunsuke/slog-error v0.2.2
 	github.com/suzuki-shunsuke/slog-util v0.3.0
 	github.com/urfave/cli/v3 v3.6.1
 	github.com/zalando/go-keyring v0.2.6
