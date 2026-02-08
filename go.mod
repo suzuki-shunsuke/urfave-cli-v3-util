@@ -9,7 +9,7 @@ require (
 	github.com/suzuki-shunsuke/slog-util v0.3.1
 	github.com/urfave/cli/v3 v3.6.2
 	github.com/zalando/go-keyring v0.2.6
-	golang.org/x/oauth2 v0.34.0
+	golang.org/x/oauth2 v0.35.0
 )
 
 require (
