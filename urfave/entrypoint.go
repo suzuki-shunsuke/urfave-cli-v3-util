@@ -2,7 +2,6 @@ package urfave
 
 import (
 	"context"
-	"errors"
 	"os"
 	"os/signal"
 	"syscall"
@@ -31,8 +30,6 @@ func Main(name, version string, run Run) {
 
 type Run func(ctx context.Context, logger *slogutil.Logger, env *Env) error
 
-var ErrSilent = errors.New("")
-
 func core(name, version string, run Run) int {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
@@ -51,7 +48,7 @@ func core(name, version string, run Run) int {
 		Args:    os.Args,
 	}
 	if err := run(ctx, logger, env); err != nil {
-		if !errors.Is(err, ErrSilent) {
+		if err.Error() != "" {
 			slogerr.WithError(logger.Logger, err).Error(name + " failed")
 		}
 		return ecerror.GetExitCode(err)
