@@ -2,6 +2,7 @@ package urfave
 
 import (
 	"context"
+	"errors"
 	"os"
 	"os/signal"
 	"syscall"
@@ -29,6 +30,8 @@ func Main(name, version string, run Run) {
 }
 
 type Run func(ctx context.Context, logger *slogutil.Logger, env *Env) error
+
+var ErrSilent = errors.New("")
 
 func core(name, version string, run Run) int {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
