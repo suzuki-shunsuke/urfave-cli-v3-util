@@ -23,8 +23,8 @@ type Env struct {
 	Args    []string
 }
 
-func Main(name, version string, run Run) {
-	if code := core(name, version, run); code != 0 {
+func Main(name, version string, run Run, args ...any) {
+	if code := core(name, version, run, args...); code != 0 {
 		os.Exit(code)
 	}
 }
@@ -33,13 +33,14 @@ type Run func(ctx context.Context, logger *slogutil.Logger, env *Env) error
 
 var ErrSilent = errors.New("")
 
-func core(name, version string, run Run) int {
+func core(name, version string, run Run, args ...any) int {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	logger := slogutil.New(&slogutil.InputNew{
 		Name:    name,
 		Version: version,
 		Out:     os.Stderr,
+		Attrs:   args,
 	})
 	env := &Env{
 		Program: name,
