@@ -1,6 +1,6 @@
 module github.com/suzuki-shunsuke/urfave-cli-v3-util
 
-go 1.25.0
+go 1.26.0
 
 require (
 	github.com/charmbracelet/x/term v0.2.2
@@ -9,7 +9,7 @@ require (
 	github.com/suzuki-shunsuke/slog-util v0.3.2
 	github.com/urfave/cli/v3 v3.11.0
 	github.com/zalando/go-keyring v0.2.8
-	golang.org/x/oauth2 v0.36.0
+	golang.org/x/oauth2 v0.37.0
 )
 
 require (
