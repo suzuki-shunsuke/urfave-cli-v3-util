@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 
 	"github.com/suzuki-shunsuke/go-error-with-exit-code/ecerror"
@@ -33,7 +34,21 @@ type Run func(ctx context.Context, logger *slogutil.Logger, env *Env) error
 
 var ErrSilent = errors.New("")
 
+// getVersion returns version if it isn't empty.
+// Otherwise, it falls back to the module version embedded in the binary by the Go toolchain,
+// so that the version is available even if the binary is built without -ldflags (e.g. go install).
+func getVersion(version string) string {
+	if version != "" {
+		return version
+	}
+	if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" {
+		return info.Main.Version
+	}
+	return "unknown"
+}
+
 func core(name, version string, run Run, args ...any) int {
+	version = getVersion(version)
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	logger := slogutil.New(&slogutil.InputNew{
